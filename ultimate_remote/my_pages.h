@@ -51,15 +51,15 @@
            
 
 //Each page of commands can have a variable width up to COL_MAX. Define the widths here.
-const uint8_t Page_Widths[PAGE_BLE+1]= {10, 10, 14, 10, 10, 10, 10};
+const uint8_t Page_Widths[PAGE_BLE+1]= {10, 10, 14, 10, 10, 10, 3};
 
 //An array of rows of commands each row is at most COL_MAX long but could be shorter.
 const cmnd_t  MyCommands[][COL_MAX] = {
   //Page change commands: cable, mouse/arrows, keyboard, kitchen, amplifier, TV, Blu-ray, extra, Bluetooth, blank, blank
   #define ROW_PAGES     0
-  {{'C',PAGE_CBL,0,SPL_CHANGE_PAGE},  {'M',PAGE_MSAR,0,SPL_CHANGE_PAGE}, {'k',PAGE_KB,0,SPL_CHANGE_PAGE}, 
+  {{'C',PAGE_CBL,0,SPL_CHANGE_PAGE},  {'M',PAGE_MSAR,0,SPL_CHANGE_PAGE}, {'K',PAGE_KB,0,SPL_CHANGE_PAGE}, 
    {'A',PAGE_AMP,0,SPL_CHANGE_PAGE},  {'T',PAGE_TV,0,SPL_CHANGE_PAGE},  {'B',PAGE_BLU,0,SPL_CHANGE_PAGE}, 
-   {'x',PAGE_TEST,0,SPL_CHANGE_PAGE}, {MY_BLUETOOTH,PAGE_BLE,0,SPL_CHANGE_PAGE},
+   {'X',PAGE_TEST,0,SPL_CHANGE_PAGE}, {MY_BLUETOOTH,PAGE_BLE,0,SPL_CHANGE_PAGE},
    {' ',0x0,0,0}, {' ',0x0,0,0}, {' ',0x0,0,0}, {' ',0x0,0,0}, {' ',0x0,0,0}, {' ',0x0,0,0}},
   //Cable-TV Play commands: Jump back, rewind, play, ff, pause, stop, live, mute, vol down, vol up
   #define ROW_CBL_PLAY  1
@@ -136,9 +136,9 @@ const cmnd_t  MyCommands[][COL_MAX] = {
    {MY_PAUSE,TV_PAUSE,NECX,0}, {MY_STOP,TV_STOP,NECX,SPL_GOTO_TVAR}, {'A',TV_A,NECX,0},
    {'B',TV_B,NECX,0}, {'C',TV_C,NECX,0}, {'D',TV_D,NECX,0}, {'M',TV_MEDIAP,NECX,SPL_GOTO_TVAR}},
 
-  //Mouse and Arrows 5: ctrl-D, space, dragon microphone,function5,empty,empty,empty,empty, empty
+  //Mouse and Arrows 5:  space, reset toggles, empty, empty, empty, empty, empty, empty, empty, empty
   #define ROW_MSAR_5 15
-  {CTR('D','d'), KEY(MY_SPACE_BAR,' '),CTR('M',KEY_F11),KEY(MY_F5,KEY_F5), KEY(MY_F2,KEY_F2), 
+  {KEY(MY_SPACE_BAR,' '),TOG('0',CYKM_TOGGLE_RESET),{' ',0x0,0,0},{' ',0x0,0,0},{' ',0x0,0,0},
    {' ',0x0,0,0}, {' ',0x0,0,0}, {' ',0x0,0,0}, {' ',0x0,0,0}, {' ',0x0, 0, 0}},
 
   //Blu-ray 1: power, rewind, play, fast-forward, pause, stop, info,  mute, vol-,vol+
@@ -162,46 +162,47 @@ const cmnd_t  MyCommands[][COL_MAX] = {
    {'~',BR_REPEAT,BLU,0}, {' ',0x0,0,0}, {' ',0x0,0,0}, 
    {' ',0x0,0,0},  {'0',AMP_MUTE,SONY,0}, {'+',AMP_VOL_UP,SONY,0}, {'-',AMP_VOL_DN,SONY,0}}, 
 
-  //Test 1 Adafruit mini-remote: minus,play, plus, 0, down, repeat, 7, 8, 9, empty
+  //Test 1 Adafruit mini-remote: minus,play, plus 
   #define ROW_TEST_1 20
-  {{'-',ADAF_MINI_VOLUME_DOWN,NEC,0}, {MY_PLAY,ADAF_MINI_PLAY_PAUSE,NEC,0}, {'+',ADAF_MINI_VOLUME_UP,NEC,0},
-   {'0',ADAF_MINI_0_10_PLUS,NEC,0},{MY_DOWN_ARROW,ADAF_MINI_DOWN_ARROW,NEC,0},{'r',ADAF_MINI_REPEAT,NEC,0},
-   {'7',ADAF_MINI_7,NEC,0}, {'8',ADAF_MINI_8,NEC,0}, {'9',ADAF_MINI_9,NEC,0}, {' ',0x0,0,0}},
-  //Test 2 Adafruit mini-remote:  set up, up, stop, 1, 2, 3, empty, empty, empty, empty
+  {{'-',ADAF_MINI_VOLUME_DOWN,NEC,0}, {MY_PLAY,ADAF_MINI_PLAY_PAUSE,NEC,0}, {'+',ADAF_MINI_VOLUME_UP,NEC,0}},
+  //Test 2 Adafruit mini-remote:  set up, up, stop
   #define ROW_TEST_2 21
-  {{'S',ADAF_MINI_SETUP,NEC,0}, {MY_UP_ARROW,ADAF_MINI_UP_ARROW,NEC,0}, {MY_STOP,ADAF_MINI_STOP_MODE,NEC,0}, 
-   {'1',ADAF_MINI_1,NEC,0}, {'2',ADAF_MINI_2,NEC,0}, {'3',ADAF_MINI_3,NEC,0}, 
-   {' ',0x0,0,0},  {' ',0x0,0,0}, {' ',0x0,0,0}, {' ',0x0,0,0}},  
-  //Test 3 Adafruit mini-remote: left, enter, right, 4, 5, 6, empty, empty, empty, empty
+  {{'S',ADAF_MINI_SETUP,NEC,0}, {MY_UP_ARROW,ADAF_MINI_UP_ARROW,NEC,0}, {MY_STOP,ADAF_MINI_STOP_MODE,NEC,0}}, 
+  //Test 3 Adafruit mini-remote: left, enter, right
   #define ROW_TEST_3 22
-  {{MY_LEFT_ARROW,ADAF_MINI_LEFT_ARROW,NEC,0}, {MY_RETURN,ADAF_MINI_ENTER_SAVE,NEC,0}, {MY_RIGHT_ARROW,ADAF_MINI_RIGHT_ARROW,NEC,0},
-   {'4',ADAF_MINI_4,NEC,0}, {'5',ADAF_MINI_5,NEC,0}, {'6',ADAF_MINI_6,NEC,0}, 
-   {' ',0x0,0,0},  {' ',0x0,0,0}, {' ',0x0,0,0}, {' ',0x0,0,0}},  
-  //Cable Extra: long select, long power, long forward, empty, blank center button (YouTube),  RCA input, RCA mute, RCA volume+, RCA volume-, RCA power
-  #define ROW_CBL_EXTRA 23
-  {{'l',SA_SELECT,6, SPL_HOLD}, {'r',SA_POWER, 11, SPL_HOLD}, {'>',SA_FF, 4, SPL_HOLD}, 
-   {' ',0x0, 0, 0}, {' ',0x0, 0, 0}, {' ',0x0, 0, 0}, {' ',0x0, 0, 0},
-   {' ',0x0, 0, 0}, {' ',0x0, 0, 0}, {' ',0x0, 0, 0}},
+  {{MY_LEFT_ARROW,ADAF_MINI_LEFT_ARROW,NEC,0}, {MY_RETURN,ADAF_MINI_ENTER_SAVE,NEC,0}, {MY_RIGHT_ARROW,ADAF_MINI_RIGHT_ARROW,NEC,0}},
+  //Test 4 Adafruit mini-remote: 0, down arrow, repeat
+  #define ROW_TEST_4 23
+  {{'0',ADAF_MINI_0_10_PLUS,NEC,0},{MY_DOWN_ARROW,ADAF_MINI_DOWN_ARROW,NEC,0},{'r',ADAF_MINI_REPEAT,NEC,0}},
+  //Test 5 Adafruit mini-remote:   1, 2, 3
+  #define ROW_TEST_5 24
+  {{'1',ADAF_MINI_1,NEC,0}, {'2',ADAF_MINI_2,NEC,0}, {'3',ADAF_MINI_3,NEC,0}}, 
+  //Test 6 Adafruit mini-remote:  4, 5, 6
+  #define ROW_TEST_6 25
+  {{'4',ADAF_MINI_4,NEC,0}, {'5',ADAF_MINI_5,NEC,0}, {'6',ADAF_MINI_6,NEC,0}}, 
+  //Test 7 Adafruit mini-remote: 7, 8, 9
+  #define ROW_TEST_7 26
+  {{'7',ADAF_MINI_7,NEC,0}, {'8',ADAF_MINI_8,NEC,0}, {'9',ADAF_MINI_9,NEC,0}},
    
-  #define ROW_KB_1 24
+  #define ROW_KB_1 27
   {KEYC('`'), KEYC('1'), KEYC('2'), KEYC('3'), KEYC('4'), KEYC('5'), KEYC('6'), 
    KEYC('7'), KEYC('8'), KEYC('9'), KEYC('0'), KEYC('-'), KEYC('='), KEY(MY_BACKSPACE,KEY_BACKSPACE)}, 
-  #define ROW_KB_2 25
+  #define ROW_KB_2 28
   {KEYC('q'), KEYC('w'), KEYC('e'), KEYC('r'), KEYC('t'), KEYC('y'), KEYC('u'),
    KEYC('i'), KEYC('o'), KEYC('p'), KEYC('['), KEYC(']'), KEYC('\\'), KEY(MY_DELETE,KEY_DELETE)}, 
-  #define ROW_KB_3 26
+  #define ROW_KB_3 29
   {KEYC('a'), KEYC('s'), KEYC('d'), KEYC('f'), KEYC('g'), KEYC('h'), KEYC('j'), 
-   KEYC('k'), KEYC('l'), KEYC(';'), KEYC('\''), KEY(MY_RETURN, KEY_RETURN),KEY('_',' '), {' ',0x0,0,0}},  
-  #define ROW_KB_4 27
+   KEYC('k'), KEYC('l'), KEYC(';'), KEYC('\''), KEY(MY_RETURN, KEY_RETURN),KEY(MY_SPACE_BAR,' '), {' ',0x0,0,0}},  
+  #define ROW_KB_4 30
   {KEYC('z'), KEYC('x'), KEYC('c'), KEYC('v'), KEYC('b'), KEYC('n'), KEYC('m'), 
    KEYC(','), KEYC('.'), KEYC('/'), {'S',0x0,0,SPL_KB_SHIFT}, 
-   TOG('C',CYKM_TOGGLE_CONTROL), TOG('A',CYKM_TOGGLE_ALT), KEY('e',KEY_ESC)}, 
-  #define ROW_KB_5 28
+   TOG('C',CYKM_TOGGLE_CONTROL), TOG('A',CYKM_TOGGLE_ALT),{' ',0x0,0,0}}, 
+  #define ROW_KB_5 31
   {KEY('h',KEY_HOME), KEY(MY_UP_ARROW,KEY_UP_ARROW), KEY(MY_PAGE_UP,KEY_PAGE_UP), 
    KEY(MY_LEFT_ARROW,KEY_LEFT_ARROW), KEY(MY_RETURN,KEY_RETURN), KEY(MY_RIGHT_ARROW,KEY_RIGHT_ARROW), 
    KEY('e',KEY_END), KEY(MY_DOWN_ARROW,KEY_DOWN_ARROW), KEY(MY_PAGE_DOWN,KEY_PAGE_DOWN), 
-   KEY('w',KEY_LEFT_GUI), TOG('W',CYKM_TOGGLE_GUI),TOG('0',CYKM_TOGGLE_RESET),{' ',0x0,0,0},{' ',0x0,0,0}},
-  #define ROW_KB_6 29
+   KEY('w',KEY_LEFT_GUI), TOG('W',CYKM_TOGGLE_GUI),KEY('e',KEY_ESC),TOG('0',CYKM_TOGGLE_RESET),{' ',0x0,0,0}},
+  #define ROW_KB_6 32
   {KEY(MY_F1,KEY_F1), KEY(MY_F2,KEY_F2), KEY(MY_F3,KEY_F3), KEY(MY_F4,KEY_F4), KEY(MY_F5,KEY_F5), 
    KEY(MY_F6,KEY_F6), KEY(MY_F7,KEY_F7), KEY(MY_F8,KEY_F8), KEY(MY_F9,KEY_F9), KEY(MY_F10,KEY_F10), 
    KEY(MY_F11,KEY_F11), KEY(MY_F12,KEY_F12), {' ',0x0,0,0},{' ',0x0,0,0}},
@@ -210,15 +211,15 @@ const cmnd_t  MyCommands[][COL_MAX] = {
    {' ',0x0,0,0}, {' ',0x0,0,0}, {' ',0x0,0,0},
    {' ',0x0,0,0}, {' ',0x0,0,0}, {' ',0x0,0,0}, {' ',0x0,0,0}}
 };
-const char Num_Rows_in_Page[]= {6, 6, 7, 4, 4, 5, 4, 1};
+const char Num_Rows_in_Page[]= {5, 6, 7, 4, 4, 5, 8, 1};
 
 //Define which pages contain which rows
 const uint8_t Pages [] [10]= {
-  /*Cable*/   {ROW_PAGES, ROW_CBL_PLAY, ROW_CBL_CH, ROW_CBL_ARROW, ROW_CBL_PIP,ROW_CBL_EXTRA},
+  /*Cable*/   {ROW_PAGES, ROW_CBL_PLAY, ROW_CBL_CH, ROW_CBL_ARROW, ROW_CBL_PIP},
   /*Mouse*/   {ROW_PAGES, ROW_MSAR_1, ROW_MSAR_2, ROW_MSAR_3, ROW_MSAR_4, ROW_MSAR_5},
   /*Keyboard*/{ROW_PAGES, ROW_KB_1,ROW_KB_2,ROW_KB_3,ROW_KB_4,ROW_KB_5,ROW_KB_6},
   /*Amp*/     {ROW_PAGES, ROW_AMP_1, ROW_AMP_2, ROW_AMP_3},
   /*TV*/      {ROW_PAGES, ROW_TV_1, ROW_TV_2, ROW_TV_3},
   /*Bluray*/  {ROW_PAGES, ROW_BLU_1, ROW_BLU_2, ROW_BLU_3, ROW_BLU_4},
-  /*Test*/    {ROW_PAGES, ROW_TEST_1, ROW_TEST_2, ROW_TEST_3}
+  /*Test*/    {ROW_PAGES, ROW_TEST_1, ROW_TEST_2, ROW_TEST_3, ROW_TEST_4, ROW_TEST_5, ROW_TEST_6, ROW_TEST_7}
 };

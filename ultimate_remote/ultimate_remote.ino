@@ -1,7 +1,7 @@
 /*
  * Code for "Ultimate Remote" which handles transmission of IR codes for TV, cable, Blu-ray etc.
  * as well as a Bluetooth mode to connect to an iOS device such as iPad or iPhone to use Bluetooth
- * switch control features.
+ * switch control features
  * 
  * Designed for use with 3 switches that are "Left", "Select", and "Right". See "my_inputs.h" for details.
  * 
@@ -284,7 +284,7 @@ void Show_Cmd(uint8_t c,uint8_t r) {
       Glyph=' ';
     } else {
       Glyph=MyCommands[Pages[Page][r]][c].Glyph;
-      if(kb_shift && (r>0) && (Glyph<127)) {
+      if(kb_shift && (r>0) && (r<5) && (Glyph<127)) {
         Glyph= Shifted [Glyph];
       }
     }
@@ -307,7 +307,6 @@ void Show_Cmd(uint8_t c,uint8_t r) {
 
 //Draw or redraw the entire page
 void Update_Page (void) {
-  Page_Width = Page_Widths[Page]; //The width of the current page
   display.fillScreen(ILI9341_BLACK);
   if (Page == PAGE_BLE) {
     Message("Switch Cntrl.", 1000);
@@ -317,7 +316,13 @@ void Update_Page (void) {
   Num_Rows = Num_Rows_in_Page[Page]; 
   uint8_t i,j;
   for (i = 0; i < Num_Rows; i++) {
+    if (i==0) {
+      Page_Width = PAGE_BLE+1;
+    } else {
+      Page_Width = Page_Widths[Page]; //The width of the current page
+    }
     for (j =0; j < Page_Width; j++) {
+      //delay (1000);
       Show_Cmd(j,i);
     }
   };
@@ -469,7 +474,6 @@ void loop() {
           Do_Select();  delay(0); 
           break;
         case PUSHED_UP:     
-        Serial.println("Pushed Up");
           Do_Up();      delay(ARROW_SPEED + 200);
           break;
         case PUSHED_DOWN:   
