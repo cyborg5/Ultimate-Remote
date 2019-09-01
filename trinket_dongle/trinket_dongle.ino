@@ -1,12 +1,9 @@
 #include <IRLibRecv.h>
 #include <IRLibDecodeBase.h>
 #include <IRLib_P12_CYKM.h>
-#include <Mouse.h>
-#include <Keyboard.h>
-#include <HID.h>
 
 #define MY_DEBUG 0
-IRrecv My_Receiver(3);
+IRrecv My_Receiver(3); //trinket
 
 IRdecodeCYKM My_Decoder;
 uint16_t myBuffer[RECV_BUF_LENGTH];
@@ -34,9 +31,6 @@ void loop() {
     diff=millis()-time;
     if (diff>(HOLD_TIMEOUT*60ul*1000ul)){
       Unit_Active=false; 
-      #if(MY_DEBUG)
-        Serial.println("releasing toggles");
-      #endif
       My_Decoder.doMouseKeyboard(CYKM_TOGGLE+CYKM_TOGGLE_RESET);
       My_Decoder.mouseSpeed=10;
     }
