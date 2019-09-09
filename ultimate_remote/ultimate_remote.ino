@@ -168,14 +168,14 @@ void setBacklight(bool Flag) {
 }
 
 //Displays an "are you sure?" message on the display
-// user must press "Down" button for yes. Any other press
+// user must press "Right" button for yes. Any other press
 // or a timeout results in no.
 bool Are_You_Sure() {
   bool Result=false;
   unsigned long Amount = millis();    //Start the timeout clock
   display.fillScreen(ILI9341_BLACK);
   display.setCursor(0, 0); display.print(F("R U sure?"));
-  display.setCursor(0, 25); display.print(F("Press Down"));
+  display.setCursor(0, 25); display.print(F("Press Right"));
   display.setCursor(0, 50); display.print(F("For Yes"));
   do {    //Read the buttons until one is pressed for time runs out
     if (Read_Buttons() ) break;
@@ -430,7 +430,7 @@ void setup() {
   display.fillRect(0,0,240,320,ILI9341_BLACK); 
   Initialize_Touch();   //Defined in my_touch.h
   Initialize_BLE();
-  Message("Updated 2019-08-06", 5000);
+  Message("Updated 2019-09-09", 5000);
   setBacklight(true);
   //Start out on the cable page
   Page = PAGE_CBL; 

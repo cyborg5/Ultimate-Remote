@@ -79,11 +79,11 @@ uint8_t Read_Buttons() {
       //There are three ways to exit.
       //  1) Press all three buttons simultaneously resulting in Current_Buttons==PUSHED_ALL
       //      This method takes care of itself.
-      //  2) Hold any combination of one or more buttons for 4 seconds
+      //  2) Hold any combination of one or more buttons for 8 seconds
       //  3) Hold Up or Down chord for more than one half second.
       //We could have combined these statements into a single condition but it was complicated
       // enough as it was. Separated it for readability sake.
-      if (Length_of_Press > 4000)  {
+      if (Length_of_Press > 8000)  {
         Current_Buttons = PUSHED_ALL;
       }
       if ((Length_of_Press > 500) && ((Current_Buttons>PUSHED_RIGHT) || (Current_Buttons == PUSHED_UP))) {
